@@ -2,6 +2,22 @@ const User = require('../Models/ModelUser')
 const bcrypt = require('bcrypt');
 
 
+async function uniqueEmail(email){
+    const response = await User.findOne({email:email})
+    
+    if(response){
+        return true
+    }else{
+        return false
+    }
+}
+
+const findUser = async (id)=>{
+    const response = await User.findOne({ _id: id });
+    return response
+}
+
+
 const createUser = async ( name,password, email) => {
     
 
@@ -25,7 +41,10 @@ const createUser = async ( name,password, email) => {
     });
 
     const savadeuser = await newUser.save();
-    return savadeuser
+
+ 
+    return savadeuser;
+
 };
 
-module.exports = { createUser };
+module.exports = { createUser,findUser,uniqueEmail};

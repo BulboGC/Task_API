@@ -1,6 +1,26 @@
 
-
+const {findUser} = require('./UserService')
 const User = require('../Models/ModelUser')
+
+
+
+
+
+
+async function delTask(id_user,id_task){
+    try{
+        const response = await findUser(id_user);
+        const updatedTasks = response.tasks.filter(task => task._id.toString() !== id_task)
+        response.tasks = updatedTasks;
+        
+        await response.save()
+        return response;
+    }catch(err)
+    {
+        throw new Error('Erro interno.')
+    }
+    
+}
 
 
 async function addTaskToUser(userId, taskData) {
@@ -54,5 +74,5 @@ const returnTasks = async (id, where = {}) => {
 
 
 
-module.exports = { addTaskToUser,returnTasks };
+module.exports = { addTaskToUser,returnTasks,delTask };
 

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')//importar o mongoose
 const jwt = require('jsonwebtoken');//importar o jwt
 const bcrypt = require('bcrypt');//impotar o bcrypt
-const {createUser} = require('../Services/UserService')
+const {createUser,uniqueEmail} = require('../Services/UserService')
 const {authenticateUser} = require('../Services/authService');
 const User = require('../Models/ModelUser');
 
@@ -23,10 +23,19 @@ const addUser = async (req, res) => {
   const {  name,password, email } = req.body;
 
   if ( !password || !email) {
-      return res
-          .status(400)
-          .send('Informe todos os campos, por favor');
+    return res
+        .status(400)
+        .send({message:'Informe todos os campos, por favor'});
   }
+
+  const match = await uniqueEmail(email)
+  if(match == true){
+    return res
+      .status(400)
+      .send({message:'O Email informado ja está cadastrado no sistema'});
+  }
+
+
 
   try {
       const savedUser = await createUser( name,password, email);
@@ -34,7 +43,7 @@ const addUser = async (req, res) => {
 
   } catch (err) {
 
-      return res.status(500).send(err);
+      return res.status(500).send({message: err});
   }
 };
 

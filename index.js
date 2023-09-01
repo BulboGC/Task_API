@@ -10,8 +10,8 @@ const jwt = require('jsonwebtoken');
 const {ProtectRoute} = require('./middlewares/jwt');
 
 // Importar os controladores
-const { addUser,login} = require('./Controllers/User');
-const {getTasks, addTask} = require('./Controllers/Task')
+const { addUser,login} = require('./Controllers/UserController');
+const {getTasks, addTask,deleteTask} = require('./Controllers/TaskController')
 
 
 // Configuração do Express
@@ -30,8 +30,9 @@ app.post('/login',login);
 
 /*    Rotas de Task         */
 
-app.get('/task',ProtectRoute,getTasks)
-app.post('/task',ProtectRoute,addTask)
+app.get('/task',ProtectRoute,getTasks);
+app.post('/task',ProtectRoute,addTask);
+app.delete('/task/:id',ProtectRoute,deleteTask);
 
 
 

@@ -19,9 +19,6 @@ const login = async (req, res) => {
   }
 };
 
-
-
-
 const addUser = async (req, res) => {
   const {  name,password, email } = req.body;
 
@@ -36,7 +33,7 @@ const addUser = async (req, res) => {
       return res.status(201).json(savedUser);
 
   } catch (err) {
-      console.error(err);
+
       return res.status(500).send(err);
   }
 };

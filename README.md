@@ -18,59 +18,7 @@
 **Parâmetros:** Objeto JSON no corpo da requisição com email e senha.
 **Resposta:** Token JWT para autenticação.
 
-### Edição de Usuários
 
-**Rota:** `PUT /edituser/:id`
-**Descrição:** Permite que usuários editem seus próprios dados.
-**Parâmetros:** ID do usuário na URL e objeto JSON no corpo da requisição.
-**Resposta:** Status de sucesso ou erro.
-
-### Obter Dados do Usuário
-
-**Rota:** `GET /user/:id`
-**Descrição:** Obtém os dados de um usuário específico.
-**Parâmetros:** ID do usuário na URL.
-**Resposta:** Dados do usuário.
-
-### Adicionar Usuário
-
-**Rota:** `POST /user`
-**Descrição:** Adiciona um novo usuário.
-**Parâmetros:** Objeto JSON no corpo da requisição com nome, email e senha.
-**Resposta:** Status de sucesso ou erro.
-
-### Obter Lista de Usuários
-
-**Rota:** `GET /user`
-**Descrição:** Obtém a lista de todos os usuários.
-**Resposta:** Lista de usuários.
-
-### Editar Usuário
-
-**Rota:** `PUT /user/edit/:id`
-**Descrição:** Edita os dados de um usuário específico.
-**Parâmetros:** ID do usuário na URL e objeto JSON no corpo da requisição.
-**Resposta:** Status de sucesso ou erro.
-
-### Excluir Usuário
-
-**Rota:** `DELETE /user/:id`
-**Descrição:** Exclui um usuário específico.
-**Parâmetros:** ID do usuário na URL.
-**Resposta:** Status de sucesso ou erro.
-
-## Middleware de Autenticação JWT
-
-**Middleware:** `ProtectRoute`
-**Descrição:** Autenticação JWT para proteger rotas.
-**Funcionamento:** Verifica e valida o token JWT no cabeçalho da requisição.
-**Ação:** Permite ou nega o acesso à rota protegida.
-
-## Banco de Dados
-
-**Banco de Dados:** MongoDB
-**Descrição:** Banco de dados NoSQL orientado a documentos.
-**ODM:** Mongoose é usado como Object Data Modeling para interagir com o MongoDB.
 
 ## Dependências
 

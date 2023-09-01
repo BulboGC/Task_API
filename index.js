@@ -11,7 +11,7 @@ const {ProtectRoute} = require('./middlewares/jwt');
 
 // Importar os controladores
 const { addUser,login} = require('./Controllers/UserController');
-const {getTasks, addTask,deleteTask} = require('./Controllers/TaskController')
+const {getTasks, addTask,deleteTask,edit, editTask} = require('./Controllers/TaskController')
 
 
 // Configuração do Express
@@ -29,10 +29,10 @@ app.post('/login',login);
 
 
 /*    Rotas de Task         */
-
 app.get('/task',ProtectRoute,getTasks);
 app.post('/task',ProtectRoute,addTask);
 app.delete('/task/:id',ProtectRoute,deleteTask);
+app.put('/task/:id',ProtectRoute,editTask);
 
 
 

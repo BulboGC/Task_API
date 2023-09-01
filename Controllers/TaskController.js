@@ -3,9 +3,38 @@ const mongoose = require('mongoose');
 //Models
 const User = require('../Models/ModelUser');
 //Services
-const {returnTasks,addTaskToUser,delTask} = require('../Services/TaskService');
+const {returnTasks,addTaskToUser,delTask,validateUpdateFields,updateTask} = require('../Services/TaskService');
 
 
+
+
+
+const editTask = async(req,res)=>{
+    const { title, description, status } = req.body;
+    const taskid = req.params.id;
+    const userId = req.user.id; 
+
+    try{
+
+        validateUpdateFields(title,description,status);
+        
+        //filtro para tirar undefined e criar um objeto para o update
+        const wheredata = {
+            ...(title !== undefined && { title }),
+            ...(description !== undefined && { description }),
+            ...(status !== undefined && { status }),
+        };
+
+        const updatedtask = await updateTask(userId,taskid,wheredata)
+
+        res.status(200).send(updatedtask)
+
+
+    }catch(err){
+        res.status(400).send({message:err.message});
+    }
+  
+} 
 
 const deleteTask = async(req,res)=>{
     const userId = req.user.id; 
@@ -54,7 +83,7 @@ const addTask = async (req, res) => {
         return  res.status(201).json(newTask.tasks);
 
     }catch(err){
-        return res.status(500).json({message: 'Erro interno'})
+        return res.status(500).json({message: err.message})
     }  
 }
 
@@ -63,9 +92,9 @@ const getTasks = async(req,res)=>{
     const {id} = await req.user;
 
     try{
-    const data = await returnTasks(id);
+        const data = await returnTasks(id);
 
-    res.json(data);
+        res.json(data);
 
     }catch(err)
     {
@@ -76,4 +105,4 @@ const getTasks = async(req,res)=>{
 
 
 
-module.exports = {getTasks,addTask,deleteTask};
+module.exports = {getTasks,addTask,deleteTask,editTask};

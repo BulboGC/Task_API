@@ -2,6 +2,10 @@ const User = require('../Models/ModelUser')
 const bcrypt = require('bcrypt');
 
 
+
+
+
+
 async function uniqueEmail(email){
     const response = await User.findOne({email:email})
     

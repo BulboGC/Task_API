@@ -4,15 +4,13 @@ const app = express();
 const cors = require('cors');
 const connectDB = require('./DB/db');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
+// Importar o roteador principal
+const v1 = require('./v1');
 
 //import midlewares
-const {ProtectRoute} = require('./middlewares/jwt');
-
-// Importar os controladores
-const { addUser,login} = require('./Controllers/UserController');
-const {getTasks, addTask,deleteTask,edit, editTask} = require('./Controllers/TaskController')
-
+const { ProtectRoute } = require('./Middlewares/jwt');
 
 // Configuração do Express
 app.use(express.urlencoded({ extended: true }));
@@ -21,31 +19,12 @@ app.use(express.json());
 //configuração cors
 app.use(cors());
 
-
-/*  Rotas De User          */
-app.post('/signin', addUser);
-app.post('/login',login);
-//app.put('/edituser/:id',ProtectRoute,editUser);
-
-
-/*    Rotas de Task         */
-app.get('/task',ProtectRoute,getTasks);
-app.post('/task',ProtectRoute,addTask);
-app.delete('/task/:id',ProtectRoute,deleteTask);
-app.put('/task/:id',ProtectRoute,editTask);
-
-
+// Use o roteador principal com um prefixo de rota, se desejar
+app.use('/v1', v1);
 
 connectDB();
-
 
 app.listen(4000, () => {
     console.log('iniciado server');
 });
-
-module.exports = app;
-
-
-
-
 

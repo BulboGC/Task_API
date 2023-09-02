@@ -97,13 +97,24 @@ const  validateUpdateFields =  (title, description, status) => {
     if (title === undefined && description === undefined && status === undefined) {
         throw new Error('Por favor, informe algum campo para a atualização');
     }
-    if (!['pendente', 'em andamento', 'concluída'].includes(status) && status != undefined) {
+    if (!['pendente', 'em andamento', 'concluida'].includes(status) && status != undefined) {
         throw new Error('O status deve ser enviado no padrão certo: um desses três (pendente, em andamento, concluída)');
     }
     return true
 }
 
 
+const validateTaskData = (title, description, status) => {
+    if (!title || !description) {
+        throw new Error('O título e a descrição são obrigatórios.');
+    }
 
-module.exports = { addTaskToUser,returnTasks,delTask,validateUpdateFields ,updateTask};
+    if (status && !['pendente', 'em andamento', 'concluida'].includes(status)) {
+        throw new Error('Status inválido.');
+    }
+};
+
+
+
+module.exports = { addTaskToUser,returnTasks,delTask,validateUpdateFields ,updateTask,validateTaskData};
 

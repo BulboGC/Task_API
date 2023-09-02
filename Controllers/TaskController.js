@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 //Models
 const User = require('../Models/ModelUser');
 //Services
-const {returnTasks,addTaskToUser,delTask,validateUpdateFields,updateTask} = require('../Services/TaskService');
+const {returnTasks,addTaskToUser,delTask,validateUpdateFields,updateTask,validateTaskData} = require('../Services/TaskService');
 
 
 
@@ -58,41 +58,40 @@ const deleteTask = async(req,res)=>{
 const addTask = async (req, res) => {
     try {
         const { title, description, status } = req.body;
-        const userId = req.user.id; 
+        const userId = req.user.id;
 
-        if (!title || !description) {
-            return res.status(400).json({ message: 'O título e a descrição são obrigatórios.' });
-        }
+        validateTaskData(title, description, status); // Chame a função de validação
 
-        let taskData = {
+        const taskData = {
             title,
-            description
+            description,
+            status: status || 'pendente', // Define um valor padrão se status não for especificado
         };
 
-    
-        if (status) {
-          
-            if (['pendente', 'em andamento', 'concluída'].includes(status)) {
-                taskData.status = status;
-            } else {
-                return res.status(400).json({ message: 'Status inválido.' });
-            }
-        }
-
-        const newTask = await addTaskToUser(userId,taskData);
-        return  res.status(201).json(newTask.tasks);
-
-    }catch(err){
-        return res.status(500).json({message: err.message})
-    }  
-}
+        const newTask = await addTaskToUser(userId, taskData);
+        
+        return res.status(201).json(newTask.tasks);
+    } catch (err) {
+        return res.status(400).json({ message: err.message });
+    }
+};
 
 const getTasks = async(req,res)=>{
-
+    
     const {id} = await req.user;
-
+    const {title,status} = req.query;
+    
     try{
-        const data = await returnTasks(id);
+
+        const wheredata = {
+            ...(title !== undefined && { title }),
+            ...(status !== undefined && { status }),
+        };
+
+   
+
+
+        const data = await returnTasks(id,wheredata);
 
         res.json(data);
 

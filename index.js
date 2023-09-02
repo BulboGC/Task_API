@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 // Importar o roteador principal
-const v1 = require('./v1');
+const v1 = require('./routers/v1/v1');
 
 //import midlewares
 const { ProtectRoute } = require('./Middlewares/jwt');

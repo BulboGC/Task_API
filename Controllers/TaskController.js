@@ -82,7 +82,7 @@ const getTasks = async(req,res)=>{
     const {title,status} = req.query;
     
     try{
-
+    
         const wheredata = {
             ...(title !== undefined && { title }),
             ...(status !== undefined && { status }),

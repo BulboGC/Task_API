@@ -47,6 +47,11 @@ async function addTaskToUser(userid, taskdata) {
 
 const returnTasks = async (id, where = {}) => {
     try {
+        
+        if(where.status){
+           where.strstatus  = await stringStatus(where.status)
+        }
+        
         const user = await User.findOne({ _id: id });
 
         if (!user) {
@@ -60,12 +65,12 @@ const returnTasks = async (id, where = {}) => {
         }
 
         if (where.status) {
-            filteredTasks = filteredTasks.filter(task => task.status === where.status);
+            filteredTasks = filteredTasks.filter(task => task.status === where.strstatus);
         }
 
         return filteredTasks;
     } catch (err) {
-        throw new Error('Erro Interno');
+        throw new Error(err);
     }
 };
 
@@ -114,6 +119,27 @@ const validateTaskData = (title, description, status) => {
     }
 };
 
+function stringStatus(numero) {
+    try {
+        const numstatus = parseInt(numero);
+
+        const numeroParaString = {
+            0: 'pendente',
+            1: 'em andamento',
+            2: 'concluida'
+        };
+
+        const status = numeroParaString[numstatus];
+
+        if (typeof status === 'undefined') {
+            throw new Error('Status não mapeado');
+        }
+
+        return status;
+    } catch (error) {
+        throw new Error('O status informado não está no padrão numérico, mande um destes 3 números: (0 = pendente, 1 = em andamento, 2 = concluída). Qualquer valor numérico fora deste padrão será desconsiderado.');
+    }
+}
 
 
 module.exports = { addTaskToUser,returnTasks,delTask,validateUpdateFields ,updateTask,validateTaskData};

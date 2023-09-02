@@ -47,6 +47,7 @@ const addUser = async (req, res) => {
   }
 };
 
+
   
 
   module.exports = { addUser,login}; // Exportar os Metodos de controle

@@ -1,42 +1,90 @@
-# API GYM
+# Task_API
 
-**Descrição:** Esta API permite gerenciar usuários e seus dados. Foi desenvolvida utilizando o framework Express do Node.js e o banco de dados MongoDB com a biblioteca Mongoose. A autenticação JWT (Json Web Token) é utilizada para garantir a segurança das rotas.
+sistema de gestão de tarefas, com um sistema simples de login para o controle de usuarios.
 
-## Endpoints
+## Documentação
 
-### Cadastro de Usuários
+A documentação completa do programa está disponível [aqui](link_para_documentacao.com).
 
-**Rota:** `POST /signin`
-**Descrição:** Cadastra novos usuários na aplicação.
-**Parâmetros:** Objeto JSON no corpo da requisição com nome, email e senha.
-**Resposta:** Status de sucesso ou erro.
+## Instalação
 
-### Login de Usuários
+É necessário Node instalado.
+É necessário MongoDB instalado.
 
-**Rota:** `POST /login`
-**Descrição:** Permite que usuários façam login.
-**Parâmetros:** Objeto JSON no corpo da requisição com email e senha.
-**Resposta:** Token JWT para autenticação.
+Para instalar as dependencias utilize esse comando na raiz do projeto:
 
+```
+npm install
+```
 
-
-## Dependências
-
-- `express`: Biblioteca Node.js para criar APIs web.
-- `mongoose`: Biblioteca Node.js para interagir com o MongoDB.
-- `cors`: Middleware para habilitar o CORS em requisições HTTP.
-- `jsonwebtoken (jwt)`: Biblioteca Node.js para autenticação com tokens JWT.
-- `nodemon`: Biblioteca de desenvolvimento para reiniciar o servidor automaticamente.
-- `dotenv`: Biblioteca para carregar variáveis de ambiente.
 
 ## Configuração
+é necessário criar um arquivo .env na raiz do projeto.
+ele é o arquivo que enviará as variaveis de ambiente ao projeto:
+ele deve conter as seguintes informações:
 
-- **Porta:** A aplicação utiliza a porta 4000.
-- **Conexão com Banco de Dados:** Feita através de `./DB/db.js` com o Mongoose.
-- **Autenticação JWT:** Implementada em `./middlewares/jwt.js` para proteger rotas.
-- **Controladores:** Implementados em `./controller/User.js`.
-- **Variáveis de Ambiente:** Configurações precisam ser definidas no `.env`.
+```
+DB_HOST=<Seuip ou localhost/>
+DB_PORT=<Porta/>
+DB_NAME=<Nome do Banco/>
+JWT_SECRET=<Uma senha secreta para o JWT/>
+BCRYPT_HASH_ROUNDS=<quantidade de vezes de hash/>
+```
 
-## Postman
+## Inicialização
 
-- [Link para a coleção no Postman](https://restless-rocket-722930.postman.co/workspace/Team-Workspace~af464cc5-7a2d-4447-8387-5c2e6f7ead4c/collection/22658973-74a9f9f5-de80-4702-822d-864c14b2e76e?action=share&creator=22658973)
+Para inicializar o projeto pode utilizar o comando:
+
+```
+node index.js
+```
+
+Ou caso deseje fazer alterações pode utilizar o:
+
+```
+npm start
+```
+com "npm start" o projeto será iniciado com nodemon para reiniciar o projeto a cada alteração salva.
+
+##Organização das pastas
+
+O projeto foi organizado assim:
+
+- **Controllers**: Contém controladores para manipular a lógica de negócios da aplicação.
+  - `TaskController.js`: Controlador para tarefas.
+  - `UserController.js`: Controlador para usuários.
+
+- **DB**: Contém arquivos relacionados ao banco de dados.
+  - `db.js`: Arquivo de configuração e conexão com o banco de dados.
+
+- **Middlewares**: Contém middlewares utilizados na aplicação.
+  - `jwt.js`: Middleware para autenticação JWT.
+
+- **Models**: Contém modelos de dados da aplicação.
+  - `ModelTask.js`: Modelo para tarefas.
+  - `ModelUser.js`: Modelo para usuários.
+
+- **Router**: Contém os roteadores da aplicação.
+  - **v1**: Roteador para a versão 1 da API.
+    - `v1.js`: Arquivo de configuração do roteador da versão 1.
+
+- **Services**: Contém serviços utilizados pela aplicação.
+  - `authService.js`: Serviço de autenticação.
+  - `TaskService.js`: Serviço para operações relacionadas a tarefas.
+  - `UserService.js`: Serviço para operações relacionadas a usuários.
+
+- **Arquivo Principal**: 
+  - `index.js`: Arquivo principal da aplicação.
+
+## Autor
+Gabriel Coutinho
+
+
+##Utilização
+Caso deseje testar a api instalada pode utilizar as rotas pré-criadas no postman entrando na documentação e clicando em utilizar no postman
+
+
+
+
+
+

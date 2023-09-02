@@ -3,9 +3,9 @@ const express = require('express');
 const router = express.Router();
 
 // Importar os controladores
-const { addUser, login } = require('./Controllers/UserController');
-const { getTasks, addTask, deleteTask, editTask } = require('./Controllers/TaskController');
-const { ProtectRoute } = require('./Middlewares/jwt');
+const { addUser, login } = require('../../Controllers/UserController');
+const { getTasks, addTask, deleteTask, editTask } = require('../../Controllers/TaskController');
+const { ProtectRoute } = require('../../Middlewares/jwt');
 
 /* Rotas De User */
 router.post('/signin', addUser);

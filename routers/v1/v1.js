@@ -1,16 +1,21 @@
-// routes/mainRouter.js
+// express / routers
 const express = require('express');
 const router = express.Router();
 
-// Importar os controladores
-const { addUser, login } = require('../../Controllers/UserController');
+// controladores
+const { addUser, login, dellUser } = require('../../Controllers/UserController');
 const { getTasks, addTask, deleteTask, editTask } = require('../../Controllers/TaskController');
+
+//middlewares
 const { ProtectRoute } = require('../../Middlewares/jwt');
+
+
 
 /* Rotas De User */
 router.post('/signin', addUser);
 router.post('/login', login);
-//router.put('/edituser/:id', ProtectRoute, editUser);
+router.delete('/user',ProtectRoute,dellUser)
+
 
 /* Rotas de Task */
 router.get('/task', ProtectRoute, getTasks);

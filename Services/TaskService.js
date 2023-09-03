@@ -1,6 +1,7 @@
 
 const {findUser} = require('./UserService')
-const User = require('../Models/ModelUser')
+const User = require('../Models/UserModel');
+const {formatString} = require('./AuxService')
 
 
 
@@ -8,13 +9,17 @@ const User = require('../Models/ModelUser')
 
 
 async function delTask(userid,taskid){
+
     try{
         const response = await findUser(userid);
-        const updatedTasks = response.tasks.filter(task => task._id.toString() !== taskid)
+
+        //filtrar dados 
+        const updatedTasks = response.tasks.filter(task => task._id.toString() !== taskid);
         response.tasks = updatedTasks;
         
-        await response.save()
+        await response.save();
         return response;
+
     }catch(err)
     {
         throw new Error('Erro interno.')
@@ -51,6 +56,10 @@ const returnTasks = async (id, where = {}) => {
         if(where.status){
            where.strstatus  = await stringStatus(where.status)
         }
+
+        if(where.importance){
+            where.strImportance = await stringImportance(where.importance)
+        }
         
         const user = await User.findOne({ _id: id });
 
@@ -59,13 +68,16 @@ const returnTasks = async (id, where = {}) => {
         }
 
         let filteredTasks = user.tasks;
-
+        
         if (where.title) {
             filteredTasks = filteredTasks.filter(task => task.title.includes(where.title));
         }
 
         if (where.status) {
             filteredTasks = filteredTasks.filter(task => task.status === where.strstatus);
+        }
+        if(where.importance){
+            filteredTasks = filteredTasks.filter(task => task.importance === where.strImportance);
         }
 
         return filteredTasks;
@@ -93,40 +105,75 @@ const updateTask = async (userid, taskid, where) => {
             throw new Error('Tarefa não encontrada'); // Trate o caso em que a tarefa não foi encontrada
         }
     } catch (err) {
-        throw new Error('Erro Interno');
+        throw err
     }
 };
 
 
-const  validateUpdateFields =  (title, description, status) => {
+const  validateUpdateFields =  (title, description, status,importance) => {
+
+
+
     if (title === undefined && description === undefined && status === undefined) {
         throw new Error('Por favor, informe algum campo para a atualização');
     }
-    if (!['pendente', 'em andamento', 'concluida'].includes(status) && status != undefined) {
-        throw new Error('O status deve ser enviado no padrão certo: um desses três (pendente, em andamento, concluída)');
+    if (status && !['Pending', 'In Progress', 'Completed'].includes(status)) {
+        throw new Error('O status deve ser enviado no padrão certo: um desses três (Pending, In Progress, Completed)');
+    }
+    if (importance && !['High Priority', 'Medium Priority', 'Low Priority','Critical', 'Standard'].includes(importance)) {
+        throw new Error('Prioridade inválido, ela deve conter um desses valores:(High Priority, Medium Priority, Low Priority,Critical, Standard )');
     }
     return true
 }
 
+//função para validar os campos para inserção de task
+const validateTaskData = (title, description, status,importance) => {
 
-const validateTaskData = (title, description, status) => {
+   
     if (!title || !description) {
         throw new Error('O título e a descrição são obrigatórios.');
     }
 
-    if (status && !['pendente', 'em andamento', 'concluida'].includes(status)) {
-        throw new Error('Status inválido.');
+
+
+    if(status){
+        //formatar a string para caso a pessoa mande em lowercase
+        const newstatus  = formatString(status)
+        
+        //verificar se está no padrão correto   
+        if (status && !['Pending', 'In Progress', 'Completed'].includes(newstatus)) {
+            throw new Error('O status deve ser enviado no padrão certo: um desses três (Pending, In Progress, Completed)');
+        }
     }
+
+
+
+    if(importance){
+        //formatar a string para caso a pessoa mande em lowercase
+        const newimportance  = formatString(importance)
+        
+        //verificar se está no padrão correto
+        if (importance && !['High Priority', 'Medium Priority', 'Low Priority','Critical', 'Standard'].includes(newimportance)) {
+            throw new Error('Prioridade inválido, ela deve conter um desses valores:(High Priority, Medium Priority, Low Priority,Critical, Standard )');
+        }
+    }
+
+
+
+    
+    
+    
 };
 
-function stringStatus(numero) {
+//função que trasforma o number status em uma string
+function stringStatus(number) {
     try {
-        const numstatus = parseInt(numero);
+        const numstatus = parseInt(number);
 
         const numeroParaString = {
-            0: 'pendente',
-            1: 'em andamento',
-            2: 'concluida'
+            0: 'Pending',
+            1: 'In Progress',
+            2: 'Completed'
         };
 
         const status = numeroParaString[numstatus];
@@ -137,9 +184,36 @@ function stringStatus(numero) {
 
         return status;
     } catch (error) {
-        throw new Error('O status informado não está no padrão numérico, mande um destes 3 números: (0 = pendente, 1 = em andamento, 2 = concluída). Qualquer valor numérico fora deste padrão será desconsiderado.');
+        throw new Error('O status informado não está no padrão numérico, mande um destes 3 números: (0 = Pending, 1 = In Progress, 2 = Completed). Qualquer valor numérico fora deste padrão será desconsiderado.');
     }
 }
+
+
+function stringImportance(number){
+    try {
+        const numImportance = parseInt(number);
+
+        const numeroParaString = {
+            0: 'High Priority',
+            1: 'Medium Priority',
+            2: 'Low Priority',
+            3: 'Critical',
+            4: 'Standard'
+        };
+
+        const importance = numeroParaString[numImportance];
+
+        if (typeof importance === 'undefined') {
+            throw new Error('Importance não mapeado');
+        }
+
+        return importance;
+    } catch (error) {
+        throw new Error('O Importance informado não está no padrão numérico, mande um destes números: (0 = High Priority, 1 = Medium Priority, 2 = Low Priority, 3 = Critical, 4 = Standard). Qualquer valor numérico fora deste padrão será desconsiderado.');
+    }
+}
+
+
 
 
 module.exports = { addTaskToUser,returnTasks,delTask,validateUpdateFields ,updateTask,validateTaskData};

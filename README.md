@@ -4,12 +4,13 @@ sistema de gestão de tarefas, com um sistema simples de login para o controle d
 
 ## Documentação
 
-A documentação completa do programa está disponível [aqui](link_para_documentacao.com).
+A documentação completa do programa está disponível [aqui](https://documenter.getpostman.com/view/22658973/2s9Y5ctg6q).
 
 ## Instalação
 
-É necessário Node instalado.
-É necessário MongoDB instalado.
+É necessário ter instalado:
+ - Node
+ - MongoDB
 
 Para instalar as dependencias utilize esse comando na raiz do projeto:
 
@@ -46,7 +47,7 @@ npm start
 ```
 com "npm start" o projeto será iniciado com nodemon para reiniciar o projeto a cada alteração salva.
 
-##Organização das pastas
+## Organização das pastas
 
 O projeto foi organizado assim:
 
@@ -80,8 +81,11 @@ O projeto foi organizado assim:
 Gabriel Coutinho
 
 
-##Utilização
-Caso deseje testar a api instalada pode utilizar as rotas pré-criadas no postman entrando na documentação e clicando em utilizar no postman
+## Utilização
+Caso deseje testar a api instalada pode utilizar as rotas pré-criadas no postman entrando na documentação e clicando em run in Postman na parte de cima na direita, você tem acesso as rotas que mapeei.
+
+
+
 
 
 

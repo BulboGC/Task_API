@@ -1,10 +1,16 @@
-const User = require('../Models/ModelUser')
+const User = require('../Models/UserModel')
 const bcrypt = require('bcrypt');
 
 
 
 
-
+async function deleteUser(userid){
+    try{
+       await User.findByIdAndDelete(userid)
+    }catch{
+        throw new Error('Erro interno')
+    }
+}
 
 async function uniqueEmail(email){
     const response = await User.findOne({email:email})
@@ -51,4 +57,4 @@ const createUser = async ( name,password, email) => {
 
 };
 
-module.exports = { createUser,findUser,uniqueEmail};
+module.exports = { createUser,findUser,uniqueEmail,deleteUser};

@@ -1,9 +1,6 @@
-const mongoose = require('mongoose')//importar o mongoose
-const jwt = require('jsonwebtoken');//importar o jwt
-const bcrypt = require('bcrypt');//impotar o bcrypt
-const {createUser,uniqueEmail} = require('../Services/UserService')
+const {createUser,uniqueEmail,deleteUser} = require('../Services/UserService')
 const {authenticateUser} = require('../Services/authService');
-const User = require('../Models/ModelUser');
+
 
 require('dotenv').config();
 
@@ -13,6 +10,7 @@ const login = async (req, res) => {
 
   try {
       const token = await authenticateUser(email, password);
+
       res.status(200).json({ status: 200, message: 'Sucesso', token });
   } catch (err) {
       res.status(401).json({ status: 401, message: err.message });
@@ -28,7 +26,8 @@ const addUser = async (req, res) => {
         .send({message:'Informe todos os campos, por favor'});
   }
 
-  const match = await uniqueEmail(email)
+  const match = await uniqueEmail(email);
+  
   if(match == true){
     return res
       .status(400)
@@ -47,7 +46,22 @@ const addUser = async (req, res) => {
   }
 };
 
+const dellUser = async(req,res)=>{
+  const userId = req.user.id; 
+  
+  try{
+    await deleteUser(userId)
+    res.status(200).send({message:'transação realizada com sucesso'});
+
+  }catch(err)
+  {
+    res.status(400).send({message:err.message});
+  }
+  
+
+}
+
 
   
 
-  module.exports = { addUser,login}; // Exportar os Metodos de controle
+  module.exports = { addUser,login,dellUser}; // Exportar os Metodos de controle

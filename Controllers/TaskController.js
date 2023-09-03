@@ -1,7 +1,7 @@
 //DB
 const mongoose = require('mongoose');
 //Models
-const User = require('../Models/ModelUser');
+const User = require('../Models/UserModel');
 //Services
 const {returnTasks,addTaskToUser,delTask,validateUpdateFields,updateTask,validateTaskData} = require('../Services/TaskService');
 
@@ -10,19 +10,20 @@ const {returnTasks,addTaskToUser,delTask,validateUpdateFields,updateTask,validat
 
 
 const editTask = async(req,res)=>{
-    const { title, description, status } = req.body;
+    const { title, description, status,importance } = req.body;
     const taskid = req.params.id;
     const userId = req.user.id; 
 
     try{
 
-        validateUpdateFields(title,description,status);
+        validateUpdateFields(title,description,status,importance);
         
         //filtro para tirar undefined e criar um objeto para o update
         const wheredata = {
             ...(title !== undefined && { title }),
             ...(description !== undefined && { description }),
             ...(status !== undefined && { status }),
+            ...(importance !== undefined && {importance})
         };
 
         const updatedtask = await updateTask(userId,taskid,wheredata)
@@ -57,15 +58,19 @@ const deleteTask = async(req,res)=>{
 
 const addTask = async (req, res) => {
     try {
-        const { title, description, status } = req.body;
+        const { title, description, status ,importance } = req.body;
         const userId = req.user.id;
 
-        validateTaskData(title, description, status); // Chame a função de validação
+        validateTaskData(title, description, status,importance); // Chame a função de validação
+
+        
+
 
         const taskData = {
             title,
             description,
-            status: status || 'pendente', // Define um valor padrão se status não for especificado
+            status: status || 'Pending', 
+            importance: importance || 'Standard'
         };
 
         const newTask = await addTaskToUser(userId, taskData);
@@ -76,16 +81,18 @@ const addTask = async (req, res) => {
     }
 };
 
+/* rota de pegar dados e tasks e filtros */
 const getTasks = async(req,res)=>{
     
     const {id} = await req.user;
-    const {title,status} = req.query;
+    const {title,status,importance} = req.query;
     
     try{
     
         const wheredata = {
             ...(title !== undefined && { title }),
             ...(status !== undefined && { status }),
+            ...(importance !== undefined && {importance}),
         };
 
    

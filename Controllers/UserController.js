@@ -1,9 +1,41 @@
-const {createUser,uniqueEmail,deleteUser} = require('../Services/UserService')
+const {createUser,uniqueEmail,deleteUser, updateUser,listUser} = require('../Services/UserService')
 const {authenticateUser} = require('../Services/authService');
 
 
 require('dotenv').config();
 
+
+const getUser = async (req,res) => {
+  const userId = req.user.id; 
+
+  try{
+    const user = await listUser(userId);
+    res.status(200).json(user);
+  }catch(err){
+    res.status(400).send({message:err.message});
+  }
+}
+
+const editUser = async (req,res)=>{
+  const userId = req.user.id; 
+  const {name,email,password} = req.body
+
+  const wheredata = {
+    ...(name !== undefined && { name }),
+    ...(email !== undefined && { email }),
+    ...(password !== undefined && {password})
+  };
+
+
+  try {
+    await updateUser(userId, wheredata);
+    res.status(201).send({ message: 'Dados atualizados com sucesso' });
+  } catch (err) {
+    res.status(400).send({ message: err.message });
+  }
+
+
+}
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -42,7 +74,7 @@ const addUser = async (req, res) => {
 
   } catch (err) {
 
-      return res.status(500).send({message: err});
+      return res.status(500).send({message: err.message});
   }
 };
 
@@ -64,4 +96,4 @@ const dellUser = async(req,res)=>{
 
   
 
-  module.exports = { addUser,login,dellUser}; // Exportar os Metodos de controle
+  module.exports = { addUser,login,dellUser,editUser,getUser}; // Exportar os Metodos de controle
